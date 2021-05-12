@@ -10,9 +10,11 @@ public class AMeanSolver{
         ProblemData sampleData = ProblemData.readSampleOffers();
         AMeanSolver solver = new AMeanSolver(sampleData);
 
-        solver.solveByRecursion(0, sampleData.areaCapacity);
-        // solver.presentSolution();
-        sampleData.showOffers();
+        double maxProfit = solver.solveByRecursion(0, sampleData.areaCapacity);
+
+        sampleData.showProblem();
+        solver.presentSolution();
+        System.out.println("Max profit: " + maxProfit);
     }
 
 
@@ -47,20 +49,22 @@ public class AMeanSolver{
     public double solveByRecursion(int nextIndex, double freeArea){
 
         Offer currentOffer = problem.offers.get(nextIndex);
-        // System.out.println("Next Index: " + nextIndex + " MAX: " + (problem.offers.size() -1));
-        // System.out.println("Free area : " + freeArea);
+        System.out.println("\n\nNext Index: " + nextIndex + " MAX: " + (problem.offers.size() -1));
+        System.out.println("Free area : " + freeArea);
+        System.out.println("Current area : " + currentOffer.getArea());
+        System.out.println("Current profit : " + currentOffer.getProfit());
         // Check if this is last item
         if(nextIndex == problem.offers.size() -1){
 
             // If There is enough area
             if (freeArea >= currentOffer.getArea()){
-
+                System.out.println("case 1 return " + currentOffer.getProfit());
                 // Take
                 takenOffers.add(currentOffer);
                 return currentOffer.getProfit();
 
             }else{ // Otherwise
-
+                System.out.println("case 2 return 0");
                 // Don't Take
                 return 0;
 
@@ -71,10 +75,12 @@ public class AMeanSolver{
 
             // If there is not enogh area
             if (freeArea < currentOffer.getArea()){
+                System.out.println("case 3 return next");
                 // Don't take and go next
                 return 0 + solveByRecursion(nextIndex + 1, freeArea);
+
             }else{ // Otherwise
- 
+                
                 // There are 2 options
 
                     // Take it
@@ -83,12 +89,12 @@ public class AMeanSolver{
                 double leaveOption = 0 + solveByRecursion(nextIndex + 1, freeArea);
                 // Return Which one has greater profit
                 if( takeOption > leaveOption){
-
+                    System.out.println("case 4 return " + takeOption);
                     takenOffers.add(currentOffer);
                     return takeOption;
 
                 }else{
-
+                    System.out.println("case 5 return " + leaveOption);
                     return leaveOption;
 
                 }
@@ -102,7 +108,7 @@ public class AMeanSolver{
 class ProblemData{
 
     // Constants
-    private static int SAMPLE_COUNT = 10;
+    private static int SAMPLE_COUNT = 3;
     private static int SAMPLE_AREA_MIN_LIMIT = 200;
     private static int SAMPLE_AREA_MAX_LIMIT = 500;
     private static int SAMPLE_PROFIT_MIN_LIMIT = 200;
@@ -133,10 +139,14 @@ class ProblemData{
         return pd;
     }
 
-    public void showOffers(){
+    public void showProblem(){
+
+        System.out.println("OFFERS : \n");
         for (Offer o : offers){
             System.out.println(o);
         }
+
+        System.out.println("CAPACITY: " + areaCapacity);
     }
 
 }
